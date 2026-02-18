@@ -10,6 +10,19 @@ import {
 import { cn } from '@/lib/utils';
 import { emailTemplates, marketingCampaigns } from '@/data/mockData';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 
 const campaignData = [
@@ -20,6 +33,7 @@ const campaignData = [
 
 export function MarketingHubPage() {
   const [activeTab, setActiveTab] = useState('campaigns');
+  const [isNewCampaignOpen, setIsNewCampaignOpen] = useState(false);
 
   return (
     <div className="space-y-6">
@@ -30,10 +44,60 @@ export function MarketingHubPage() {
           <p className="text-gray-500 mt-1">Create and manage marketing campaigns</p>
         </div>
         <div className="flex items-center gap-3">
-          <Button className="gradient-coral hover:opacity-90 text-white" onClick={() => toast.info('New campaign builder opening...')}>
-            <Plus className="w-4 h-4 mr-2" />
-            New Campaign
-          </Button>
+          <Dialog open={isNewCampaignOpen} onOpenChange={setIsNewCampaignOpen}>
+            <DialogTrigger asChild>
+              <Button className="gradient-coral hover:opacity-90 text-white">
+                <Plus className="w-4 h-4 mr-2" />
+                New Campaign
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[500px]">
+              <DialogHeader>
+                <DialogTitle>Create Marketing Campaign</DialogTitle>
+                <DialogDescription>Launch a new promotion or update to your customers.</DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div className="space-y-2">
+                  <Label>Campaign Name</Label>
+                  <Input placeholder="e.g. Summer Glow Sale" />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Channel</Label>
+                    <Select defaultValue="email">
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="email">Email Campaign</SelectItem>
+                        <SelectItem value="sms">SMS Marketing</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Audience</Label>
+                    <Select defaultValue="all">
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Customers</SelectItem>
+                        <SelectItem value="vip">VIP Only</SelectItem>
+                        <SelectItem value="recent">Recent Visitors</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>Message Content</Label>
+                  <Textarea placeholder="Type your marketing message here..." className="h-24" />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setIsNewCampaignOpen(false)}>Cancel</Button>
+                <Button className="gradient-coral text-white" onClick={() => {
+                  toast.success('Campaign launched effectively!');
+                  setIsNewCampaignOpen(false);
+                }}>Launch Campaign</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 

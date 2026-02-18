@@ -11,10 +11,23 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { coupons } from '@/data/mockData';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 
 export function CouponsPage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [isCreateCouponOpen, setIsCreateCouponOpen] = useState(false);
 
   const stats = {
     totalCoupons: 45,
@@ -37,10 +50,67 @@ export function CouponsPage() {
           <p className="text-gray-500 mt-1">Create and manage promotional codes</p>
         </div>
         <div className="flex items-center gap-3">
-          <Button className="gradient-coral hover:opacity-90 text-white">
-            <Plus className="w-4 h-4 mr-2" />
-            Create Coupon
-          </Button>
+          <Dialog open={isCreateCouponOpen} onOpenChange={setIsCreateCouponOpen}>
+            <DialogTrigger asChild>
+              <Button className="gradient-coral hover:opacity-90 text-white">
+                <Plus className="w-4 h-4 mr-2" />
+                Create Coupon
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Create New Coupon</DialogTitle>
+                <DialogDescription>
+                  Define a new promotional code for your customers.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="code">Coupon Code</Label>
+                    <Input id="code" placeholder="e.g. SUMMER24" className="uppercase" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="discountType">Discount Type</Label>
+                    <Select defaultValue="percentage">
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="percentage">Percentage (%)</SelectItem>
+                        <SelectItem value="fixed">Fixed Amount ($)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="value">Discount Value</Label>
+                    <Input id="value" type="number" placeholder="20" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="minPurchase">Min. Purchase ($)</Label>
+                    <Input id="minPurchase" type="number" placeholder="50" />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="expiry">Expiry Date</Label>
+                  <Input id="expiry" type="date" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="limit">Usage Limit (Total)</Label>
+                  <Input id="limit" type="number" placeholder="100" />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setIsCreateCouponOpen(false)}>Cancel</Button>
+                <Button className="gradient-coral text-white" onClick={() => {
+                  toast.success('Coupon created successfully!');
+                  setIsCreateCouponOpen(false);
+                }}>Create Coupon</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
@@ -98,7 +168,7 @@ export function CouponsPage() {
                 )}>
                   <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16" />
                   <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full -ml-12 -mb-12" />
-                  
+
                   <div className="relative z-10">
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-2">
@@ -116,8 +186,8 @@ export function CouponsPage() {
                       </span>
                     </div>
                     <p className="text-4xl font-bold">
-                      {coupon.discountType === 'percentage' 
-                        ? `${coupon.discountValue}%` 
+                      {coupon.discountType === 'percentage'
+                        ? `${coupon.discountValue}%`
                         : `$${coupon.discountValue}`
                       }
                     </p>
@@ -129,8 +199,8 @@ export function CouponsPage() {
                   {/* Coupon Code */}
                   <div className="flex items-center justify-between p-3 bg-gray-100 rounded-lg mb-4">
                     <code className="font-mono font-bold text-lg">{coupon.code}</code>
-                    <Button 
-                      variant="ghost" 
+                    <Button
+                      variant="ghost"
                       size="sm"
                       onClick={() => handleCopyCode(coupon.code)}
                     >
@@ -152,8 +222,8 @@ export function CouponsPage() {
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-500">Valid Until</span>
                       <span className="font-medium">
-                        {coupon.validUntil 
-                          ? new Date(coupon.validUntil).toLocaleDateString() 
+                        {coupon.validUntil
+                          ? new Date(coupon.validUntil).toLocaleDateString()
                           : 'No expiry'
                         }
                       </span>
@@ -168,7 +238,7 @@ export function CouponsPage() {
                         {Math.round((coupon.usageCount / (coupon.usageLimitTotal || 100)) * 100)}%
                       </span>
                     </div>
-                    <Progress 
+                    <Progress
                       value={(coupon.usageCount / (coupon.usageLimitTotal || 100)) * 100}
                       className="h-2"
                     />
@@ -203,9 +273,9 @@ export function CouponsPage() {
               { name: 'Free Service', icon: Gift, description: 'Complimentary service' },
               { name: 'Bundle Deal', icon: Tag, description: 'Multi-service discount' },
             ].map((type, index) => (
-              <Button 
-                key={index} 
-                variant="outline" 
+              <Button
+                key={index}
+                variant="outline"
                 className="h-auto py-4 flex flex-col items-center gap-2 hover:bg-coral-50 hover:border-coral-200"
               >
                 <type.icon className="w-6 h-6 text-coral-500" />

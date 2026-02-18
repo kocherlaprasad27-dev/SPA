@@ -9,10 +9,24 @@ import {
   CheckCircle, Send, Download, QrCode
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { giftCards } from '@/data/mockData';
+import { giftCards, customers } from '@/data/mockData';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { toast } from 'sonner';
 
 export function GiftCardsPage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [isCreateCardOpen, setIsCreateCardOpen] = useState(false);
 
   const stats = {
     totalSold: 245,
@@ -30,14 +44,49 @@ export function GiftCardsPage() {
           <p className="text-gray-500 mt-1">Manage gift card sales and redemptions</p>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="outline" className="border-coral-200 hover:bg-coral-50">
+          <Button variant="outline" className="border-coral-200 hover:bg-coral-50" onClick={() => toast.info('Exporting gift card data...')}>
             <Download className="w-4 h-4 mr-2" />
             Export
           </Button>
-          <Button className="gradient-coral hover:opacity-90 text-white">
-            <Plus className="w-4 h-4 mr-2" />
-            Create Gift Card
-          </Button>
+          <Dialog open={isCreateCardOpen} onOpenChange={setIsCreateCardOpen}>
+            <DialogTrigger asChild>
+              <Button className="gradient-coral hover:opacity-90 text-white">
+                <Plus className="w-4 h-4 mr-2" />
+                Create Gift Card
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Issue Gift Card</DialogTitle>
+                <DialogDescription>Create a new gift card for a customer or as a generic voucher.</DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div className="space-y-2">
+                  <Label>Amount ($)</Label>
+                  <Input type="number" placeholder="50.00" />
+                </div>
+                <div className="space-y-2">
+                  <Label>Recipient Name</Label>
+                  <Input placeholder="Optional" />
+                </div>
+                <div className="space-y-2">
+                  <Label>Expiry Date</Label>
+                  <Input type="date" />
+                </div>
+                <div className="space-y-2">
+                  <Label>Message</Label>
+                  <Textarea placeholder="Add a personal note..." />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setIsCreateCardOpen(false)}>Cancel</Button>
+                <Button className="gradient-coral text-white" onClick={() => {
+                  toast.success('Gift card issued successfully!');
+                  setIsCreateCardOpen(false);
+                }}>Issue Card</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
@@ -92,7 +141,7 @@ export function GiftCardsPage() {
                 <div className="gradient-coral p-6 text-white relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16" />
                   <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full -ml-12 -mb-12" />
-                  
+
                   <div className="relative z-10">
                     <div className="flex items-center justify-between mb-4">
                       <Gift className="w-8 h-8" />
@@ -151,19 +200,19 @@ export function GiftCardsPage() {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Button variant="outline" className="h-auto py-4 flex flex-col items-center gap-2">
+            <Button variant="outline" className="h-auto py-4 flex flex-col items-center gap-2" onClick={() => setIsCreateCardOpen(true)}>
               <Plus className="w-6 h-6 text-coral-500" />
               <span className="text-sm">Create New</span>
             </Button>
-            <Button variant="outline" className="h-auto py-4 flex flex-col items-center gap-2">
+            <Button variant="outline" className="h-auto py-4 flex flex-col items-center gap-2" onClick={() => toast.info('Scanner starting...')}>
               <QrCode className="w-6 h-6 text-coral-500" />
               <span className="text-sm">Scan Card</span>
             </Button>
-            <Button variant="outline" className="h-auto py-4 flex flex-col items-center gap-2">
+            <Button variant="outline" className="h-auto py-4 flex flex-col items-center gap-2" onClick={() => toast.info('Enter card number to check balance')}>
               <CheckCircle className="w-6 h-6 text-coral-500" />
               <span className="text-sm">Check Balance</span>
             </Button>
-            <Button variant="outline" className="h-auto py-4 flex flex-col items-center gap-2">
+            <Button variant="outline" className="h-auto py-4 flex flex-col items-center gap-2" onClick={() => toast.info('Generating export...')}>
               <Download className="w-6 h-6 text-coral-500" />
               <span className="text-sm">Export Report</span>
             </Button>

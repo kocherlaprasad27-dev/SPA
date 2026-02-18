@@ -236,27 +236,27 @@ export function HomePage() {
                         {[
                             {
                                 id: "s1",
-                                title: "Swedish Massage",
-                                time: "60 min",
-                                price: "$95",
+                                title: "Thread Eyebrows",
+                                time: "10 min",
+                                price: "$9.99",
                                 rating: "4.9",
-                                image: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800"
+                                image: "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=800"
                             },
                             {
-                                id: "s2",
-                                title: "Deep Tissue Massage",
-                                time: "90 min",
-                                price: "$145",
+                                id: "s14",
+                                title: "Wax Full Legs",
+                                time: "30 min",
+                                price: "$44.99",
                                 rating: "4.8",
-                                image: "https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=800"
+                                image: "https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=800"
                             },
                             {
-                                id: "s3",
-                                title: "Hydrating Facial",
-                                time: "60 min",
-                                price: "$85",
+                                id: "s25",
+                                title: "Facial Hydradermabrasion",
+                                time: "90 min",
+                                price: "$149.99",
                                 rating: "5.0",
-                                image: "https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=800"
+                                image: "https://images.unsplash.com/photo-1570172619664-d62b3393996b?w=800"
                             }
                         ].map((service, index) => (
                             <motion.div
@@ -313,10 +313,10 @@ export function HomePage() {
 
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
                         {[
-                            { name: "Massage", count: "12 Services", image: "https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=500" },
-                            { name: "Facials", count: "8 Services", image: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=500" },
-                            { name: "Hair", count: "15 Services", image: "https://images.unsplash.com/photo-1562322140-8baeececf3df?w=500" },
-                            { name: "Nails", count: "6 Services", image: "https://images.unsplash.com/photo-1632345031435-8727f6897d53?w=500" }
+                            { name: "Threading", count: "9 Services", image: "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=500" },
+                            { name: "Waxing", count: "11 Services", image: "https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=500" },
+                            { name: "Facials", count: "6 Services", image: "https://images.unsplash.com/photo-1570172619664-d62b3393996b?w=500" },
+                            { name: "Wellness", count: "2 Services", image: "https://images.unsplash.com/photo-1519824145371-296894a0daa9?w=500" }
                         ].map((cat, i) => (
                             <motion.div
                                 key={i}
@@ -362,7 +362,7 @@ export function HomePage() {
                                 avatar: "https://randomuser.me/api/portraits/women/44.jpg"
                             },
                             {
-                                text: "I've been coming here for facials for years and my skin has never looked better. Highly recommend the Hydrating Facial!",
+                                text: "I've tried many places for back pain, but the Deep Tissue massage here is unmatched. Truly therapeutic and relaxing.",
                                 author: "Sarah Williams",
                                 role: "VIP Member",
                                 avatar: "https://randomuser.me/api/portraits/women/68.jpg"

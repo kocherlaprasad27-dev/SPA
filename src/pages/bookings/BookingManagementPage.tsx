@@ -126,7 +126,7 @@ export function BookingManagementPage() {
               </div>
             </div>
 
-            <TabsContent value="all" className="mt-0">
+            <div className="mt-0">
               <div className="hidden lg:block overflow-x-auto">
                 <Table>
                   <TableHeader>
@@ -334,7 +334,7 @@ export function BookingManagementPage() {
                   </Card>
                 ))}
               </div>
-            </TabsContent>
+            </div>
           </Tabs>
         </div>
       </Card>

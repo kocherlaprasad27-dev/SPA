@@ -106,7 +106,7 @@ export function CustomerManagementPage() {
               </div>
             </div>
 
-            <TabsContent value="all" className="mt-6">
+            <div className="mt-6">
               <div className="hidden md:block overflow-x-auto">
                 <Table>
                   <TableHeader>
@@ -296,7 +296,7 @@ export function CustomerManagementPage() {
                   </Card>
                 ))}
               </div>
-            </TabsContent>
+            </div>
           </Tabs>
         </CardHeader>
       </Card>

@@ -196,8 +196,8 @@ export function AboutPage() {
                 <div className="grid md:grid-cols-3 gap-8">
                     {[
                         { name: "Sarah Johnson", role: "Senior Therapist", spec: "Deep Tissue & Healing", img: "1580489944761-15a19d654956" },
-                        { name: "Michael Chang", role: "Master Stylist", spec: "Color & Precision Cuts", img: "1573496359142-b8d87734a5a2" },
-                        { name: "Emma Davis", role: "Esthetician", spec: "Organic Facials", img: "1595152772835-219674b2a8a6" }
+                        { name: "Michael Chang", role: "Massage Therapist", spec: "Sports & Recovery", img: "1573496359142-b8d87734a5a2" },
+                        { name: "Emma Davis", role: "Holistic Healer", spec: "Aromatherapy & Stone", img: "1595152772835-219674b2a8a6" }
                     ].map((member, index) => (
                         <motion.div
                             key={index}

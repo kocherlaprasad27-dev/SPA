@@ -9,9 +9,24 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { membershipPlans, customerMemberships } from '@/data/mockData';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { toast } from 'sonner';
 
 export function MembershipPackagesPage() {
   const [activeTab, setActiveTab] = useState('plans');
+  const [isCreatePlanOpen, setIsCreatePlanOpen] = useState(false);
+  const [isCreatePackageOpen, setIsCreatePackageOpen] = useState(false);
 
   return (
     <div className="space-y-6">
@@ -22,10 +37,57 @@ export function MembershipPackagesPage() {
           <p className="text-gray-500 mt-1">Manage membership plans and prepaid packages</p>
         </div>
         <div className="flex items-center gap-3">
-          <Button className="gradient-coral hover:opacity-90 text-white">
-            <Plus className="w-4 h-4 mr-2" />
-            Create Plan
-          </Button>
+          <Dialog open={isCreatePlanOpen} onOpenChange={setIsCreatePlanOpen}>
+            <DialogTrigger asChild>
+              <Button className="gradient-coral hover:opacity-90 text-white">
+                <Plus className="w-4 h-4 mr-2" />
+                Create Plan
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[500px]">
+              <DialogHeader>
+                <DialogTitle>Create Membership Plan</DialogTitle>
+                <DialogDescription>Define a new membership tier and benefits.</DialogDescription>
+              </DialogHeader>
+              <div className="grid grid-cols-2 gap-4 py-4">
+                <div className="space-y-2 col-span-2">
+                  <Label htmlFor="planName">Plan Name</Label>
+                  <Input id="planName" placeholder="e.g. Gold Membership" />
+                </div>
+                <div className="space-y-2">
+                  <Label>Type</Label>
+                  <Select defaultValue="time_based">
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="time_based">Time Based</SelectItem>
+                      <SelectItem value="visit_based">Visit Based</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="planPrice">Price ($)</Label>
+                  <Input id="planPrice" type="number" placeholder="599" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="planDuration">Duration (Months)</Label>
+                  <Input id="planDuration" type="number" placeholder="12" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="planDiscount">Discount (%)</Label>
+                  <Input id="planDiscount" type="number" placeholder="15" />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setIsCreatePlanOpen(false)}>Cancel</Button>
+                <Button className="gradient-coral text-white" onClick={() => {
+                  toast.success('Membership plan created!');
+                  setIsCreatePlanOpen(false);
+                }}>Save Plan</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
@@ -62,8 +124,8 @@ export function MembershipPackagesPage() {
         <TabsContent value="plans" className="space-y-6 mt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {membershipPlans.map((plan, index) => (
-              <Card 
-                key={plan.id} 
+              <Card
+                key={plan.id}
                 className={cn(
                   'border-0 shadow-soft overflow-hidden',
                   index === 1 && 'ring-2 ring-coral-500 ring-offset-2'
@@ -79,7 +141,7 @@ export function MembershipPackagesPage() {
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
-                      <Crown className={cn('w-6 h-6', 
+                      <Crown className={cn('w-6 h-6',
                         index === 0 && 'text-gray-500',
                         index === 1 && 'text-coral-500',
                         index === 2 && 'text-purple-500',
@@ -153,10 +215,53 @@ export function MembershipPackagesPage() {
               <Gift className="w-16 h-16 text-coral-300 mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-gray-700">Prepaid Packages</h3>
               <p className="text-gray-500 mt-2">Create and manage prepaid service packages</p>
-              <Button className="mt-4 gradient-coral text-white">
-                <Plus className="w-4 h-4 mr-2" />
-                Create Package
-              </Button>
+              <Dialog open={isCreatePackageOpen} onOpenChange={setIsCreatePackageOpen}>
+                <DialogTrigger asChild>
+                  <Button className="mt-4 gradient-coral text-white">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Create Package
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Create Prepaid Package</DialogTitle>
+                    <DialogDescription>Create a bundled service package for customers.</DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4 py-4">
+                    <div className="space-y-2">
+                      <Label>Package Name</Label>
+                      <Input placeholder="e.g. 10x HydraFacial Bundle" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Included Service</Label>
+                      <Select>
+                        <SelectTrigger><SelectValue placeholder="Select service" /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="s1">HydraFacial</SelectItem>
+                          <SelectItem value="s2">Swedish Massage</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label>Quantity</Label>
+                        <Input type="number" placeholder="10" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Bundle Price</Label>
+                        <Input type="number" placeholder="1200" />
+                      </div>
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setIsCreatePackageOpen(false)}>Cancel</Button>
+                    <Button className="gradient-coral text-white" onClick={() => {
+                      toast.success('Prepaid package created!');
+                      setIsCreatePackageOpen(false);
+                    }}>Save Package</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </CardContent>
           </Card>
         </TabsContent>

@@ -40,7 +40,7 @@ const galleryImages = [
         id: 5,
         category: 'treatments',
         src: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&q=80&w=1000',
-        title: 'Facial Therapy',
+        title: 'Couples Massage',
     },
     {
         id: 6,
@@ -85,8 +85,8 @@ export function GalleryPage() {
                             variant={filter === category.id ? "default" : "outline"}
                             onClick={() => setFilter(category.id)}
                             className={`rounded-full px-6 ${filter === category.id
-                                    ? 'bg-coral-500 hover:bg-coral-600 text-white border-coral-500'
-                                    : 'border-gray-300 text-gray-600 hover:border-coral-300 hover:text-coral-500'
+                                ? 'bg-coral-500 hover:bg-coral-600 text-white border-coral-500'
+                                : 'border-gray-300 text-gray-600 hover:border-coral-300 hover:text-coral-500'
                                 }`}
                         >
                             {category.name}

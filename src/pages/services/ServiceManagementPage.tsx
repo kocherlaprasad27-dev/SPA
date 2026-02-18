@@ -69,7 +69,7 @@ export function ServiceManagementPage() {
           ))}
         </TabsList>
 
-        <TabsContent value="all" className="mt-6">
+        <div className="mt-6">
           {/* Search Bar */}
           <div className="relative mb-6">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -176,7 +176,7 @@ export function ServiceManagementPage() {
               </Card>
             ))}
           </div>
-        </TabsContent>
+        </div>
       </Tabs>
 
       {/* Service Stats */}

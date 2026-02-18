@@ -1,19 +1,40 @@
 import { useState } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import {
   Award, Star, Gift, TrendingUp, Users, Crown, Gem,
-  Plus, Edit, Trash2, Eye, Sparkles, Zap
+  Plus, Edit, Trash2, Eye, Sparkles, Zap, Search
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { loyaltyTiers, customerLoyalty, coupons } from '@/data/mockData';
+import { loyaltyTiers, customerLoyalty, coupons, customers } from '@/data/mockData';
 import { toast } from 'sonner';
 
 export function LoyaltyProgramPage() {
   const [activeTab, setActiveTab] = useState('tiers');
+  const [isAddPointsOpen, setIsAddPointsOpen] = useState(false);
+  const [isRedeemPointsOpen, setIsRedeemPointsOpen] = useState(false);
+  const [isCreateCouponOpen, setIsCreateCouponOpen] = useState(false);
 
   return (
     <div className="space-y-6">
@@ -24,14 +45,110 @@ export function LoyaltyProgramPage() {
           <p className="text-gray-500 mt-1">Manage rewards, points, and customer tiers</p>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="outline" className="border-coral-200 hover:bg-coral-50" onClick={() => toast.info('Redemption catalog opening...')}>
-            <Gift className="w-4 h-4 mr-2" />
-            Redeem Points
-          </Button>
-          <Button className="gradient-coral hover:opacity-90 text-white" onClick={() => toast.info('Manual points adjustment tool opening...')}>
-            <Plus className="w-4 h-4 mr-2" />
-            Add Points
-          </Button>
+          {/* Redeem Points Dialog */}
+          <Dialog open={isRedeemPointsOpen} onOpenChange={setIsRedeemPointsOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="border-coral-200 hover:bg-coral-50">
+                <Gift className="w-4 h-4 mr-2" />
+                Redeem Points
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Redeem Points</DialogTitle>
+                <DialogDescription>
+                  Apply customer loyalty points towards a service or product discount.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div className="space-y-2">
+                  <Label>Search Customer</Label>
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <Input className="pl-10" placeholder="Name or email..." />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>Available Coupons</Label>
+                  <Select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select reward" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="c1">$10 OFF (500 pts)</SelectItem>
+                      <SelectItem value="c2">$25 OFF (1000 pts)</SelectItem>
+                      <SelectItem value="c3">Free Add-on (750 pts)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setIsRedeemPointsOpen(false)}>Cancel</Button>
+                <Button className="gradient-coral text-white" onClick={() => {
+                  toast.success('Reward redeemed successfully!');
+                  setIsRedeemPointsOpen(false);
+                }}>Confirm Redemption</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+
+          {/* Add Points Dialog */}
+          <Dialog open={isAddPointsOpen} onOpenChange={setIsAddPointsOpen}>
+            <DialogTrigger asChild>
+              <Button className="gradient-coral hover:opacity-90 text-white">
+                <Plus className="w-4 h-4 mr-2" />
+                Add Points
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Add Loyalty Points</DialogTitle>
+                <DialogDescription>
+                  Manually adjust or award points to a customer's loyalty account.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div className="space-y-2">
+                  <Label>Select Customer</Label>
+                  <Select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Search customers..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {customers.map(c => (
+                        <SelectItem key={c.id} value={c.id}>{c.firstName} {c.lastName}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="points">Points to Add</Label>
+                  <Input id="points" type="number" placeholder="e.g. 100" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="reason">Reason for Adjustment</Label>
+                  <Select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select reason" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="purchase">Service Purchase</SelectItem>
+                      <SelectItem value="referral">Referral Bonus</SelectItem>
+                      <SelectItem value="complimentary">Complimentary / Apology</SelectItem>
+                      <SelectItem value="other">Manual Override</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setIsAddPointsOpen(false)}>Cancel</Button>
+                <Button className="gradient-coral text-white" onClick={() => {
+                  toast.success('Points added successfully!');
+                  setIsAddPointsOpen(false);
+                }}>Apply Adjustment</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
@@ -220,6 +337,62 @@ export function LoyaltyProgramPage() {
         </TabsContent>
 
         <TabsContent value="coupons" className="space-y-6 mt-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold text-gray-800">Active Coupons</h2>
+            <Dialog open={isCreateCouponOpen} onOpenChange={setIsCreateCouponOpen}>
+              <DialogTrigger asChild>
+                <Button className="gradient-coral text-white">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Create Coupon
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Create New Coupon</DialogTitle>
+                  <DialogDescription>
+                    Define a new promotional code for your loyalty members.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4 py-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="loyalty-code">Coupon Code</Label>
+                      <Input id="loyalty-code" placeholder="e.g. LOYALTY20" className="uppercase" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="loyalty-discountType">Discount Type</Label>
+                      <Select defaultValue="percentage">
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="percentage">Percentage (%)</SelectItem>
+                          <SelectItem value="fixed">Fixed Amount ($)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="loyalty-value">Discount Value</Label>
+                      <Input id="loyalty-value" type="number" placeholder="20" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="loyalty-minPurchase">Min. Purchase ($)</Label>
+                      <Input id="loyalty-minPurchase" type="number" placeholder="50" />
+                    </div>
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setIsCreateCouponOpen(false)}>Cancel</Button>
+                  <Button className="gradient-coral text-white" onClick={() => {
+                    toast.success('Coupon created successfully!');
+                    setIsCreateCouponOpen(false);
+                  }}>Create Coupon</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {coupons.map((coupon) => (
               <Card key={coupon.id} className="border-0 shadow-soft">

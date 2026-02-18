@@ -19,6 +19,9 @@ import { BookingManagementPage } from './pages/bookings/BookingManagementPage';
 import { CalendarViewPage } from './pages/bookings/CalendarViewPage';
 import { ServiceManagementPage } from './pages/services/ServiceManagementPage';
 import { EmployeeManagementPage } from './pages/employees/EmployeeManagementPage';
+import { NewEmployeePage } from './pages/employees/NewEmployeePage';
+import { NewServicePage } from './pages/services/NewServicePage';
+import { NewCustomerPage } from './pages/customers/NewCustomerPage';
 import { CustomerManagementPage } from './pages/customers/CustomerManagementPage';
 import { CRMDashboardPage } from './pages/crm/CRMDashboardPage';
 import { LoyaltyProgramPage } from './pages/loyalty/LoyaltyProgramPage';
@@ -33,6 +36,7 @@ import { AdminSettingsPage } from './pages/admin/AdminSettingsPage';
 import { GiftCardsPage as AdminGiftCardsPage } from './pages/giftcards/GiftCardsPage';
 import { CouponsPage } from './pages/coupons/CouponsPage';
 import { ReportsPage } from './pages/reports/ReportsPage';
+import { HelpPage } from './pages/help/HelpPage';
 import { IntegrationsPage } from './pages/integrations/IntegrationsPage';
 
 // Public Pages
@@ -53,8 +57,6 @@ import { BookingDetailPage } from './pages/bookings/BookingDetailPage';
 import { NewBookingPage } from './pages/bookings/NewBookingPage';
 import { CustomerDetailPage } from './pages/customers/CustomerDetailPage';
 // For now, mapping NewCustomer to placeholders or generic forms if needed
-const NewCustomerPage = () => <div className="p-8">New Customer Page Coming Soon...</div>;
-const NewServicePage = () => <div className="p-8">New Service Page Coming Soon...</div>;
 
 
 // Customer Pages
@@ -276,6 +278,7 @@ function App() {
             <Route path="/admin/services/new" element={<ProtectedRoute><AppLayout><NewServicePage /></AppLayout></ProtectedRoute>} />
 
             <Route path="/admin/employees" element={<ProtectedRoute><AppLayout><EmployeeManagementPage /></AppLayout></ProtectedRoute>} />
+            <Route path="/admin/employees/new" element={<ProtectedRoute><AppLayout><NewEmployeePage /></AppLayout></ProtectedRoute>} />
 
             <Route path="/admin/customers" element={<ProtectedRoute><AppLayout><CustomerManagementPage /></AppLayout></ProtectedRoute>} />
             <Route path="/admin/customers/new" element={<ProtectedRoute><AppLayout><NewCustomerPage /></AppLayout></ProtectedRoute>} />
@@ -293,6 +296,7 @@ function App() {
             <Route path="/admin/gift-cards" element={<ProtectedRoute><AppLayout><AdminGiftCardsPage /></AppLayout></ProtectedRoute>} />
             <Route path="/admin/coupons" element={<ProtectedRoute><AppLayout><CouponsPage /></AppLayout></ProtectedRoute>} />
             <Route path="/admin/reports" element={<ProtectedRoute><AppLayout><ReportsPage /></AppLayout></ProtectedRoute>} />
+            <Route path="/admin/help" element={<ProtectedRoute><AppLayout><HelpPage /></AppLayout></ProtectedRoute>} />
             <Route path="/admin/integrations" element={<ProtectedRoute><AppLayout><IntegrationsPage /></AppLayout></ProtectedRoute>} />
             <Route path="/admin/settings" element={<ProtectedRoute><AppLayout><AdminSettingsPage /></AppLayout></ProtectedRoute>} />
 

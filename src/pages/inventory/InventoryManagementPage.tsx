@@ -10,9 +10,20 @@ import {
   ShoppingCart, Truck, Eye
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { products, productCategories } from '@/data/mockData';
+import { products, productCategories, customers } from '@/data/mockData';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { toast } from 'sonner';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
 
 const stockData = [
   { name: 'Skincare', inStock: 45, lowStock: 12, outOfStock: 3 },
@@ -25,6 +36,9 @@ const stockData = [
 export function InventoryManagementPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
+  const [isAddProductOpen, setIsAddProductOpen] = useState(false);
+  const [isPurchaseOrderOpen, setIsPurchaseOrderOpen] = useState(false);
+  const [isAddVendorOpen, setIsAddVendorOpen] = useState(false);
 
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -48,14 +62,105 @@ export function InventoryManagementPage() {
           <p className="text-gray-500 mt-1">Manage products, stock levels, and suppliers</p>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="outline" className="border-coral-200 hover:bg-coral-50" onClick={() => toast.info('Purchase order wizard opening...')}>
-            <Truck className="w-4 h-4 mr-2" />
-            Purchase Order
-          </Button>
-          <Button className="gradient-coral hover:opacity-90 text-white" onClick={() => toast.info('Add new product form opening...')}>
-            <Plus className="w-4 h-4 mr-2" />
-            Add Product
-          </Button>
+          {/* Purchase Order Dialog */}
+          <Dialog open={isPurchaseOrderOpen} onOpenChange={setIsPurchaseOrderOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="border-coral-200 hover:bg-coral-50">
+                <Truck className="w-4 h-4 mr-2" />
+                Purchase Order
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Create Purchase Order</DialogTitle>
+                <DialogDescription>
+                  Generate a new order for inventory replenishment.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div className="space-y-2">
+                  <Label>Select Vendor</Label>
+                  <Select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Choose supplier" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="v1">Beauty Supplies Co.</SelectItem>
+                      <SelectItem value="v2">Wellness Direct</SelectItem>
+                      <SelectItem value="v3">Global Spa Logistics</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Expected Delivery</Label>
+                  <Input type="date" />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setIsPurchaseOrderOpen(false)}>Cancel</Button>
+                <Button className="gradient-coral text-white" onClick={() => {
+                  toast.success('Purchase order created successfully!');
+                  setIsPurchaseOrderOpen(false);
+                }}>Generate PO</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+
+          {/* Add Product Dialog */}
+          <Dialog open={isAddProductOpen} onOpenChange={setIsAddProductOpen}>
+            <DialogTrigger asChild>
+              <Button className="gradient-coral hover:opacity-90 text-white">
+                <Plus className="w-4 h-4 mr-2" />
+                Add Product
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[500px]">
+              <DialogHeader>
+                <DialogTitle>Add New Product</DialogTitle>
+                <DialogDescription>
+                  Enter details for the new inventory item.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid grid-cols-2 gap-4 py-4">
+                <div className="space-y-2 col-span-2">
+                  <Label htmlFor="pname">Product Name</Label>
+                  <Input id="pname" placeholder="e.g. Essential Oil" />
+                </div>
+                <div className="space-y-2">
+                  <Label>Category</Label>
+                  <Select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {productCategories.map(c => (
+                        <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="psku">SKU</Label>
+                  <Input id="psku" placeholder="SKU-001" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="pqty">Initial Stock</Label>
+                  <Input id="pqty" type="number" placeholder="0" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="pprice">Selling Price</Label>
+                  <Input id="pprice" type="number" placeholder="0.00" />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setIsAddProductOpen(false)}>Cancel</Button>
+                <Button className="gradient-coral text-white" onClick={() => {
+                  toast.success('Product added to inventory!');
+                  setIsAddProductOpen(false);
+                }}>Save Product</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
@@ -245,10 +350,37 @@ export function InventoryManagementPage() {
               <Truck className="w-16 h-16 text-coral-300 mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-gray-700">Vendors</h3>
               <p className="text-gray-500 mt-2">Manage your suppliers and vendor relationships</p>
-              <Button className="mt-4 gradient-coral text-white">
-                <Plus className="w-4 h-4 mr-2" />
-                Add Vendor
-              </Button>
+              <Dialog open={isAddVendorOpen} onOpenChange={setIsAddVendorOpen}>
+                <DialogTrigger asChild>
+                  <Button className="mt-4 gradient-coral text-white">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Vendor
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Add Supplier</DialogTitle>
+                    <DialogDescription>Add a new vendor to your procurement system.</DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4 py-4">
+                    <div className="space-y-2">
+                      <Label>Company Name</Label>
+                      <Input placeholder="e.g. Zen Spa Supplies" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Contact Email</Label>
+                      <Input type="email" placeholder="orders@zenspa.com" />
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setIsAddVendorOpen(false)}>Cancel</Button>
+                    <Button className="gradient-coral text-white" onClick={() => {
+                      toast.success('Vendor added successfully!');
+                      setIsAddVendorOpen(false);
+                    }}>Add Vendor</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </CardContent>
           </Card>
         </TabsContent>

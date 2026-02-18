@@ -10,10 +10,23 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { savedReports } from '@/data/mockData';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
 
 export function ReportsPage() {
   const [activeTab, setActiveTab] = useState('scheduled');
+  const [isCreateReportOpen, setIsCreateReportOpen] = useState(false);
 
   const reportTemplates = [
     { name: 'Revenue Summary', category: 'Financial', icon: DollarSign },
@@ -33,10 +46,62 @@ export function ReportsPage() {
           <p className="text-gray-500 mt-1">Generate and schedule business reports</p>
         </div>
         <div className="flex items-center gap-3">
-          <Button className="gradient-coral hover:opacity-90 text-white">
-            <Plus className="w-4 h-4 mr-2" />
-            Create Report
-          </Button>
+          <Dialog open={isCreateReportOpen} onOpenChange={setIsCreateReportOpen}>
+            <DialogTrigger asChild>
+              <Button className="gradient-coral hover:opacity-90 text-white">
+                <Plus className="w-4 h-4 mr-2" />
+                Create Report
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Generate Business Report</DialogTitle>
+                <DialogDescription>Select specific parameters to generate your custom report.</DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div className="space-y-2">
+                  <Label>Report Template</Label>
+                  <Select>
+                    <SelectTrigger><SelectValue placeholder="Select report type" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="revenue">Revenue Summary</SelectItem>
+                      <SelectItem value="bookings">Booking Analytics</SelectItem>
+                      <SelectItem value="customers">Customer Retention</SelectItem>
+                      <SelectItem value="inventory">Inventory Status</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>From Date</Label>
+                    <Input type="date" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>To Date</Label>
+                    <Input type="date" />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>Format</Label>
+                  <Select defaultValue="pdf">
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="pdf">PDF Document</SelectItem>
+                      <SelectItem value="excel">Excel Spreadsheet</SelectItem>
+                      <SelectItem value="csv">CSV File</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setIsCreateReportOpen(false)}>Cancel</Button>
+                <Button className="gradient-coral text-white" onClick={() => {
+                  toast.success('Report generation started!');
+                  setIsCreateReportOpen(false);
+                }}>Generate</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 

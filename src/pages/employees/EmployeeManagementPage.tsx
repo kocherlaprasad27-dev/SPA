@@ -109,7 +109,7 @@ export function EmployeeManagementPage() {
               </div>
             </div>
 
-            <TabsContent value="all" className="mt-6">
+            <div className="mt-6">
               <div className="hidden lg:block overflow-x-auto">
                 <Table>
                   <TableHeader>
@@ -323,7 +323,7 @@ export function EmployeeManagementPage() {
                   </Card>
                 ))}
               </div>
-            </TabsContent>
+            </div>
           </Tabs>
         </CardHeader>
       </Card>

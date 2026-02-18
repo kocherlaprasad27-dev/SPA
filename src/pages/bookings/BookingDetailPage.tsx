@@ -137,11 +137,11 @@ export function BookingDetailPage() {
                                                 <Sparkles className="w-6 h-6" />
                                             </div>
                                             <div>
-                                                <p className="font-bold text-gray-800">Swedish Massage</p>
-                                                <p className="text-sm text-gray-500">60 minutes • Deep relaxation treatment</p>
+                                                <p className="font-bold text-gray-800">Signature Massage</p>
+                                                <p className="text-sm text-gray-500">75 minutes • Fusion relaxation treatment</p>
                                             </div>
                                         </div>
-                                        <p className="font-bold text-lg text-indigo-600">$95.00</p>
+                                        <p className="font-bold text-lg text-indigo-600">$195.00</p>
                                     </div>
                                 </div>
                             </div>
@@ -164,11 +164,11 @@ export function BookingDetailPage() {
                             <div className="space-y-3">
                                 <div className="flex justify-between text-gray-600">
                                     <span>Subtotal</span>
-                                    <span>$95.00</span>
+                                    <span>$195.00</span>
                                 </div>
                                 <div className="flex justify-between text-gray-600">
                                     <span>Tax (8.25%)</span>
-                                    <span>$7.84</span>
+                                    <span>$16.09</span>
                                 </div>
                                 <div className="flex justify-between text-gray-600">
                                     <span>Discount</span>
@@ -177,7 +177,7 @@ export function BookingDetailPage() {
                                 <Separator />
                                 <div className="flex justify-between items-center py-2 text-xl font-bold text-gray-800">
                                     <span>Total Amount</span>
-                                    <span>$102.84</span>
+                                    <span>$211.09</span>
                                 </div>
                                 <div className="flex items-center justify-between p-4 rounded-xl bg-gray-50">
                                     <div className="flex items-center gap-3">

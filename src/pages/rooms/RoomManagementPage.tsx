@@ -9,13 +9,26 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { rooms } from '@/data/mockData';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
 
 export function RoomManagementPage() {
   const [activeTab, setActiveTab] = useState('all');
+  const [isAddRoomOpen, setIsAddRoomOpen] = useState(false);
 
-  const filteredRooms = activeTab === 'all' 
-    ? rooms 
+  const filteredRooms = activeTab === 'all'
+    ? rooms
     : rooms.filter(r => r.roomType === activeTab);
 
   const getStatusColor = (room: typeof rooms[0]) => {
@@ -31,14 +44,58 @@ export function RoomManagementPage() {
           <p className="text-gray-500 mt-1">Manage treatment rooms, cabins, and facilities</p>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="outline" className="border-coral-200 hover:bg-coral-50">
+          <Button variant="outline" className="border-coral-200 hover:bg-coral-50" onClick={() => toast.info('Maintenance schedule opening...')}>
             <Wrench className="w-4 h-4 mr-2" />
             Maintenance
           </Button>
-          <Button className="gradient-coral hover:opacity-90 text-white">
-            <Plus className="w-4 h-4 mr-2" />
-            Add Room
-          </Button>
+          <Dialog open={isAddRoomOpen} onOpenChange={setIsAddRoomOpen}>
+            <DialogTrigger asChild>
+              <Button className="gradient-coral hover:opacity-90 text-white">
+                <Plus className="w-4 h-4 mr-2" />
+                Add Room
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Add Treatment Room</DialogTitle>
+                <DialogDescription>Create a new space for spa services and treatments.</DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div className="space-y-2">
+                  <Label>Room Name</Label>
+                  <Input placeholder="e.g. Zen Suite" />
+                </div>
+                <div className="space-y-2">
+                  <Label>Room Code</Label>
+                  <Input placeholder="e.g. R-101" />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Type</Label>
+                    <Select defaultValue="single">
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="single">Single</SelectItem>
+                        <SelectItem value="couple">Couple</SelectItem>
+                        <SelectItem value="vip">VIP</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Capacity</Label>
+                    <Input type="number" placeholder="1" />
+                  </div>
+                </div>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setIsAddRoomOpen(false)}>Cancel</Button>
+                <Button className="gradient-coral text-white" onClick={() => {
+                  toast.success('Room added successfully!');
+                  setIsAddRoomOpen(false);
+                }}>Save Room</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
